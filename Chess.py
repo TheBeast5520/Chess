@@ -30,11 +30,13 @@ class Piece(Canvas):
         Canvas.__init__(self,master,width=self.slength,height=self.slength,bg=self.bgColor,highlightthickness=0,relief=RAISED)
 
         self.piece='none'
+        self.text = self.create_text(50/2,50/2,anchor = "center", text="", fill='black', font = ("Arial", 24))
 
         self.bind("<Button-1>",self.move)
 
     def createPiece(self,pieceName, size=(50,50)):
-        self.createImage(pieceName,size)
+        self.itemconfig(self.text,text=pieceName[0:2])
+        # self.createImage(pieceName,size)
         self.piece = pieceName
 
     def createImage(self,pieceName,size):
@@ -50,7 +52,7 @@ class Piece(Canvas):
 
     def removePiece(self):
         self.piece = 'none'
-        self.delete(self.pic)
+        self.itemconfig(self.text,text="")
 
     def highlight(self):
         self['bg']='lightgreen'
