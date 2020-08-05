@@ -1,8 +1,11 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import time
 
 def f(x, y):
     return x*8+y
+
+
 
 class Piece(Canvas):
 
@@ -34,9 +37,13 @@ class Piece(Canvas):
 
         self.bind("<Button-1>",self.move)
 
+    def __str__(self):
+        return self.piece
+
     def createPiece(self,pieceName, size=(50,50)):
-        self.itemconfig(self.text,text=pieceName[0:2])
-        # self.createImage(pieceName,size)
+        if pieceName=="none":
+            return 0
+        self.createImage(pieceName,size)
         self.piece = pieceName
 
     def createImage(self,pieceName,size):
@@ -52,7 +59,8 @@ class Piece(Canvas):
 
     def removePiece(self):
         self.piece = 'none'
-        self.itemconfig(self.text,text="")
+        self.delete(self.piece)
+        # self.itemconfig(self.text,text="")
 
     def highlight(self):
         self['bg']='lightgreen'
@@ -69,6 +77,8 @@ class Piece(Canvas):
             return 0
         self.master.unhighlight()
         self.highlight()
+
+
 
 class chessBoard(Frame):
     def __init__(self,master):
@@ -105,6 +115,7 @@ class chessBoard(Frame):
         self.cells[f(7,7)].createPiece('wrook')
         self.turn = 0
 
+
     def toggleTurn(self):
         self.update_pState()
         self.turn = (self.turn+1)%2
@@ -112,6 +123,37 @@ class chessBoard(Frame):
     def unhighlight(self):
         for i in self.cells:
             i.unhighlight()
+
+    def flipBoard(self):
+        for i in range(8):
+            for j in range(8):
+                self.cells[f(i,j)].grid_remove()
+        self.cells=self.rotateMat()
+        for i in range(8):
+            for j in range(8):
+                self.cells[f(i,j)].grid(row=i,column=j)
+                self.cells[f(i,j)].createPiece(self.cells[f(i,j)].piece)
+
+    def rotateMat(self):
+        d = {0:7,1:6,2:5,3:4,4:3,5:2,6:1,7:0}
+        l = []
+        for i in range(8):
+            l.append([])
+            for j in range(8):
+                l[i].append(self.cells[f(i,j)])
+        temp=[]
+        for i in range(8):
+            temp.append([])
+            for j in range(8):
+                temp[i].append(0)
+        for i in range(8):
+            for j in range(8):
+                temp[d[i]][d[j]]=l[i][j]
+        l=[]
+        for i in range(8):
+            for j in range(8):
+                l.append(temp[i][j])
+        return l
 
 
 
