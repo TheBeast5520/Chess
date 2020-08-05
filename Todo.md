@@ -4,6 +4,7 @@ DONE
 
 TODO
 
+* Flip-Board function
 * Bishop moves
 * Pawn moves
   * En Passant
