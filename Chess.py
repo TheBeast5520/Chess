@@ -58,7 +58,13 @@ class Piece(Canvas):
     def unhighlight(self):
         self['bg']=self.bgColor
 
+    def isHighlighted(self):
+        return self['bg']=='lightgreen'
+
     def move(self, misc=''):
+        if self.isHighlighted():
+            self.unhighlight()
+            return 0
         self.master.unhighlight()
         self.highlight()
 
