@@ -1,4 +1,8 @@
 DONE
+* Board
+* Piece Placement
+
+TODO
 
 * Bishop moves
 * Pawn moves
@@ -7,9 +11,6 @@ DONE
   * Promotion
 * Rook moves
 * Queen moves
-
-TODO
-
 * Knight moves
 * King moves
   * Castling
