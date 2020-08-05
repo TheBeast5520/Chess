@@ -11,13 +11,13 @@ class Piece(Canvas):
             'bbish':'pieces/bBishop.png',\
             'bking':'pieces/bKing.png',\
             'brook':'pieces/bRook.png',\
-            'bknit':'pieces/bKnight.png',\
+            'bnite':'pieces/bKnight.png',\
             'bquen':'pieces/bQueen.png',\
             'wpawn':'pieces/wPawn.png',\
             'wbish':'pieces/wBishop.png',\
             'wking':'pieces/wKing.png',\
             'wrook':'pieces/wRook.png',\
-            'wknit':'pieces/wKnight.png',\
+            'wnite':'pieces/wKnight.png',\
             'wquen':'pieces/wQueen.png',\
             }
 
@@ -85,23 +85,23 @@ class chessBoard(Frame):
                 self.cells.append(Piece(self,color,(i,j)))
                 self.cells[i*8+j].grid(row=i,column=j)
         self.cells[0].createPiece('brook')
-        self.cells[1].createPiece('bknit')
+        self.cells[1].createPiece('bnite')
         self.cells[2].createPiece('bbish')
         self.cells[3].createPiece('bquen')
         self.cells[4].createPiece('bking')
         self.cells[5].createPiece('bbish')
-        self.cells[6].createPiece('bknit')
+        self.cells[6].createPiece('bnite')
         self.cells[7].createPiece('brook')
         for i in range(8):
             self.cells[f(1,i)].createPiece('bpawn')
             self.cells[f(6,i)].createPiece('wpawn')
         self.cells[f(7,0)].createPiece('wrook')
-        self.cells[f(7,1)].createPiece('wknit')
+        self.cells[f(7,1)].createPiece('wnite')
         self.cells[f(7,2)].createPiece('wbish')
         self.cells[f(7,3)].createPiece('wquen')
         self.cells[f(7,4)].createPiece('wking')
         self.cells[f(7,5)].createPiece('wbish')
-        self.cells[f(7,6)].createPiece('wknit')
+        self.cells[f(7,6)].createPiece('wnite')
         self.cells[f(7,7)].createPiece('wrook')
         self.turn = 0
 
