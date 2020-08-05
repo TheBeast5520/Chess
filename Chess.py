@@ -74,10 +74,10 @@ class chessPiece(Canvas):
                     self.promote()
                 self.master.lastCell=self.cLoc
                 self.master.toggleTurn()
-##            else:
-##                self.master.cells[self.master.lastCell].unhighlight()
-##                self.master.lastCell=self.cLoc
-##                self.highlight()
+           else:
+               self.master.cells[self.master.lastCell].unhighlight()
+               self.master.lastCell=self.cLoc
+               self.highlight()
             
 
     def highlight(self):
