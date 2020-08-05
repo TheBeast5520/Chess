@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 def f(x, y):
     return x*8+y
 
-
+pieceClicked = (False, None)
 
 class Piece(Canvas):
 
@@ -71,11 +71,19 @@ class Piece(Canvas):
         return self['bg']=='lightgreen'
 
     def move(self, misc=''):
-        if self.isHighlighted():
+        global pieceClicked
+        if self==pieceClicked[1]:
             self.unhighlight()
+            pieceClicked=(False,None)
             return 0
-        self.master.unhighlight()
-        self.highlight()
+        if pieceClicked[0] == True:
+            pieceClicked[1].unhighlight()
+            pieceClicked = (False, None)
+        if self.piece != 'none':
+            self.highlight()
+            pieceClicked = (True, self)
+        else:
+            return
 
 
 
@@ -153,6 +161,8 @@ class chessBoard(Frame):
             for j in range(8):
                 l.append(temp[i][j])
         return l    
+
+    
 
 
 def play_chess():
