@@ -152,8 +152,7 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 l.append(temp[i][j])
-        return l
-
+        return l    
 
 
 def play_chess():
