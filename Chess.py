@@ -206,7 +206,8 @@ class chessBoard(Frame):
         dr = [1, 1, -1, -1]
         dc = [1, -1, 1, -1]
         for i in range(4):
-            r = srcRow+dr[i], c = srcCol+dc[i]
+            r = srcRow+dr[i]
+            c = srcCol+dc[i]
             while (True):
                 if (r > 7 or r < 0 or c > 7 or c < 0):
                     break
@@ -262,19 +263,19 @@ class chessBoard(Frame):
             if move in pawnMoves:
                 legal = True
         if piece[1:] == 'bish':
-            bishopMoves = self.genBishopMoves(r1, c1)
+            bishopMoves = self.genBishMoves(color, r1, c1)
             if move in bishopMoves:
                 legal = True
         if piece[1:] == 'nite':
-            knightMoves = self.genKnightMoves(r1, c1)
+            knightMoves = self.genKnightMoves(color, r1, c1)
             if move in knightMoves:
                 legal = True
         if piece[1:] == 'quen':
-            queenMoves = self.genQueenMoves(r1, c1)
+            queenMoves = self.genQueenMoves(color, r1, c1)
             if move in queenMoves:
                 legal = True
         if piece[1:] == 'king':
-            kingMoves = self.genKingMoves(r1, c1)
+            kingMoves = self.genKingMoves(color, r1, c1)
             if move in kingMoves:
                 legal = True
 
