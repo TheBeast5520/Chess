@@ -32,7 +32,7 @@ class Piece(Canvas):
         Canvas.__init__(self,master,width=self.slength,height=self.slength,bg=self.bgColor,highlightthickness=0,relief=RAISED)
 
         self.piece='none'
-        self.text = self.create_text(50/2,50/2,anchor = "center", text="", fill='black', font = ("Arial", 24))
+        # self.text = self.create_text(50/2,50/2,anchor = "center", text="", fill='black', font = ("Arial", 24))
 
         self.bind("<Button-1>",self.move)
 
@@ -58,7 +58,7 @@ class Piece(Canvas):
 
     def removePiece(self):
         self.piece = 'none'
-        self.delete(self.piece)
+        self.delete(self.pic)
         # self.itemconfig(self.text,text="")
 
     def highlight(self):
@@ -72,33 +72,48 @@ class Piece(Canvas):
 
     def move(self, misc=''):
         global pieceClicked
-        
-        if self.master.turn == 0:
-            color = "w"
-        else:
-            color = "b"
+
+        colors = ['w','b']
+        color = colors[self.master.turn]
         
         matchingColors = self.piece[0] == color
         
         if pieceClicked[0] == False:   # if first click
             if matchingColors == False:  # if clicking opponent piece
                 return
+            else:
+                if self.piece != "none":
+                    self.highlight()
+                    pieceClicked = (True,self)
         else:   # if second click
             if self == pieceClicked[1]:  # if clicking original piece                
                 samePiece = True
             else:
                 samePiece = False
-                
+            
+            if self.piece[0] != color:
+                if (self.master.validMove(  f(pieceClicked[1].x,pieceClicked[1].y), \
+                                            f(self.x           ,self.y)            )):
+                    self.createPiece(pieceClicked[1].piece)
+                    pieceClicked[1].removePiece()
+                    self.master.toggleTurn()
+            else:
+                pieceClicked[1].unhighlight()
+                pieceClicked = (False, None)
+                self.highlight()
+                pieceClicked = (True, self) 
+                return 
+
             pieceClicked[1].unhighlight()
             pieceClicked = (False, None)
             
             if samePiece:
                 return
             
-        if self.piece != 'none':
-            if matchingColors:
-                self.highlight()
-                pieceClicked = (True, self)
+        # if self.piece != 'none':
+        #     if matchingColors:
+        #         self.highlight()
+        #         pieceClicked = (True, self)
         return
 
 class chessBoard(Frame):
@@ -137,7 +152,6 @@ class chessBoard(Frame):
         self.turn = 0
 
     def toggleTurn(self):
-        self.update_pState()
         self.turn = (self.turn+1)%2
 
     def unhighlight(self):
@@ -173,7 +187,16 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 l.append(temp[i][j])
-        return l    
+        return l
+
+    def validMove(self, oCell, nCell):
+        ''' Given the starting cell (oCell) and the 
+            ending cell (nCell), this function returns whether
+            it is a valid move. 
+
+            Function will be given index of the cells in the list \'self.cells\''''
+        ############ Work in Progress #############
+        return True
 
 def play_chess():
     root = Tk()
