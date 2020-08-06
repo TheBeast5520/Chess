@@ -79,27 +79,22 @@ class Piece(Canvas):
         matchingColors = self.piece[0] == color
         
         if pieceClicked[0] == False:   # if first click
-            if matchingColors == False:  # if clicking opponent piece
-                return
-            else:
-                if self.piece != "none":
+            if self.piece != "none":
+                if matchingColors:  # if clicking own piece
                     self.highlight()
                     pieceClicked = (True,self)
-        else:   # if second click
-            if self == pieceClicked[1]:  # if clicking original piece                
-                samePiece = True
-            else:
-                samePiece = False
-            
-            if self.piece[0] != color:
+        else:   # if second click            
+            if matchingColors == False:
                 if (self.master.validMove(  pieceClicked[1].x,pieceClicked[1].y, \
-                                            self.x           ,self.y                )):
+                                            self.x           ,self.y            )):
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
                     self.master.toggleTurn()
             else:
                 pieceClicked[1].unhighlight()
-                pieceClicked = (False, None)
+                if self == pieceClicked[1]:  # if same piece
+                    pieceClicked = (False, None)
+                    return
                 self.highlight()
                 pieceClicked = (True, self) 
                 return 
@@ -107,13 +102,6 @@ class Piece(Canvas):
             pieceClicked[1].unhighlight()
             pieceClicked = (False, None)
             
-            if samePiece:
-                return
-            
-        # if self.piece != 'none':
-        #     if matchingColors:
-        #         self.highlight()
-        #         pieceClicked = (True, self)
         return
 
 class chessBoard(Frame):
