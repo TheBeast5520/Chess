@@ -22,7 +22,7 @@ class Piece(Canvas):
             'wnite':'pieces/wKnight.png',\
             'wquen':'pieces/wQueen.png',\
             }
-
+    
     def __init__(self,master,BG,coord):
         self.bgColor=BG
         self.x=coord[0]
@@ -72,20 +72,34 @@ class Piece(Canvas):
 
     def move(self, misc=''):
         global pieceClicked
-        if self==pieceClicked[1]:
-            self.unhighlight()
-            pieceClicked=(False,None)
-            return 0
-        if pieceClicked[0] == True:
+        
+        if self.master.turn == 0:
+            color = "w"
+        else:
+            color = "b"
+        
+        matchingColors = self.piece[0] == color
+        
+        if pieceClicked[0] == False:   # if first click
+            if matchingColors == False:  # if clicking opponent piece
+                return
+        else:   # if second click
+            if self == pieceClicked[1]:  # if clicking original piece                
+                samePiece = True
+            else:
+                samePiece = False
+                
             pieceClicked[1].unhighlight()
             pieceClicked = (False, None)
+            
+            if samePiece:
+                return
+            
         if self.piece != 'none':
-            self.highlight()
-            pieceClicked = (True, self)
-        else:
-            return
-
-
+            if matchingColors:
+                self.highlight()
+                pieceClicked = (True, self)
+        return
 
 class chessBoard(Frame):
     def __init__(self,master):
@@ -121,7 +135,6 @@ class chessBoard(Frame):
         self.cells[f(7,6)].createPiece('wnite')
         self.cells[f(7,7)].createPiece('wrook')
         self.turn = 0
-
 
     def toggleTurn(self):
         self.update_pState()
