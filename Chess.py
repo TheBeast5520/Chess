@@ -162,10 +162,4 @@ class chessBoard(Frame):
                 l.append(temp[i][j])
         return l    
 
-def play_chess():
-    root = Tk()
-    root.title('Chess')
-    game = chessBoard(root)
-    root.mainloop()
-
-play_chess()
+X
