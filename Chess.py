@@ -212,7 +212,6 @@ class chessBoard(Frame):
 
         # call separate functions.
 
-
         return True
 
 
