@@ -186,11 +186,23 @@ class chessBoard(Frame):
 
         color = ['w','b'][self.turn]
 
-        
+        if self.cells[f(r1,c1)].piece == color + 'bish':
+            return self.bishMoves(r1,c1,r2,c2)
+        elif self.cells[f(r1,c1)].piece == color + 'pawn':
+            return self.pawnMoves(r1,c1,r2,c2)
+
 
         # call separate functions.
 
         return True
+
+    def bishMoves(self,r1,c1,r2,c2):
+        #generate moves and return whether given move is one of them
+        pass
+
+    def pawnMoves(self,r1,c1,r2,c2):
+        #generate moves and return whether given move is one of them
+        pass
 
 
 
