@@ -1,10 +1,10 @@
 DONE
 * Board
 * Piece Placement
+* Flip-Board function
 
 TODO
 
-* Flip-Board function
 * Bishop moves
 * Pawn moves
   * En Passant
