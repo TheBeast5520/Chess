@@ -200,6 +200,29 @@ class chessBoard(Frame):
                 pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol-1])
                 
         return pawnMoves
+
+    def genBishMoves(self, color, srcRow, srcCol):
+        bishMoves = []
+        dr = [1, 1, -1, -1]
+        dc = [1, -1, 1, -1]
+        for i in range(4):
+            r = srcRow+dr[i], c = srcCol+dc[i]
+            while (True):
+                if (r > 7 or r < 0 or c > 7 or c < 0):
+                    break
+                if self.cells[f(r,c)].piece == 'none':
+                    bishMoves.append([r, c])
+                    r += dr[i]
+                    c += dr[i]
+                    continue
+                else:
+                    if (self.cells[f(r,c)].piece[0]==color):
+                        break
+                    else:
+                        bishMoves.append([r,c])
+                        break
+        return bishMoves
+
         
     def searchForPieces(self, color):
         pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
@@ -231,7 +254,7 @@ class chessBoard(Frame):
 
         color = ['w','b'][self.turn]
         piece = self.cells[f(r1,c1)].piece
-        move = [r1, c1, r2, c2]
+        move = [r2, c2]
         legal = False  # only based on movement for now
         
         if piece[1:] == 'pawn':
