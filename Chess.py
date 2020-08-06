@@ -186,29 +186,7 @@ class chessBoard(Frame):
 
         color = ['w','b'][self.turn]
 
-        pawns = []
-        bishops = []
-        knights = []
-        rooks = []
-        queens = []
-        king = []
-
-
-        for i in range(8):
-            for j in range(8):
-                temp = self.cells[f(i,j)].piece
-                if temp == color + 'pawn':
-                    pawns.append([i,j])
-                elif temp == color + 'bish':
-                    bishops.append([i,j])
-                elif temp == color + 'nite':
-                    knights.append([i,j])
-                elif temp == color + 'rook':
-                    rooks.append([i,j])
-                elif temp == color + 'quen':
-                    rooks.append([i,j])
-                elif temp == color + 'king':
-                    king.append([i,j])
+        
 
         # call separate functions.
 
@@ -224,3 +202,28 @@ def play_chess():
 
 
 play_chess()
+
+
+# pawns = []
+# bishops = []
+# knights = []
+# rooks = []
+# queens = []
+# king = []
+
+
+# for i in range(8):
+#     for j in range(8):
+#         temp = self.cells[f(i,j)].piece
+#         if temp == color + 'pawn':
+#             pawns.append([i,j])
+#         elif temp == color + 'bish':
+#             bishops.append([i,j])
+#         elif temp == color + 'nite':
+#             knights.append([i,j])
+#         elif temp == color + 'rook':
+#             rooks.append([i,j])
+#         elif temp == color + 'quen':
+#             rooks.append([i,j])
+#         elif temp == color + 'king':
+#             king.append([i,j])
