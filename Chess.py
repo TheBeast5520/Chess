@@ -182,21 +182,21 @@ class chessBoard(Frame):
         pawnMoves = []
         
         if color == "w":
-            if f(srcRow+1,srcCol).piece == 'none':
+            if self.cells[f(srcRow+1,srcCol)].piece == 'none':
                 if srcRow == 7:
-                    
-            if f(srcRow-1,srcCol+1).piece != 'none':
+                    pass
+            if self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
                 pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol+1])
-            if f(srcRow+1,srcCol+1).piece != 'none':
+            if self.cells[f(srcRow+1,srcCol+1)].piece != 'none':
                 pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol+1])
             
         if color == "b":
-            if f(srcRow-1,srcCol).piece == 'none':
+            if self.cells[f(srcRow-1,srcCol)].piece == 'none':
                 if srcRow == 2:
-                    
-            if f(srcRow-1,srcCol-1).piece != 'none':
+                    pass
+            if self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
                 pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol-1])
-            if f(srcRow+1,srcCol-1).piece != 'none':
+            if self.cells[f(srcRow+1,srcCol-1)].piece != 'none':
                 pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol-1])
                 
         return pawnMoves
@@ -256,6 +256,8 @@ class chessBoard(Frame):
                 legal = True
 
         # call separate functions.
+
+        # check for check ;)
 
         return legal
 
