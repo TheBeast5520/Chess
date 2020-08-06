@@ -181,4 +181,5 @@ def play_chess():
     game = chessBoard(root)
     root.mainloop()
 
+
 play_chess()
