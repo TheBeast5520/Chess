@@ -92,8 +92,8 @@ class Piece(Canvas):
                 samePiece = False
             
             if self.piece[0] != color:
-                if (self.master.validMove(  f(pieceClicked[1].x,pieceClicked[1].y), \
-                                            f(self.x           ,self.y)            )):
+                if (self.master.validMove(  pieceClicked[1].x,pieceClicked[1].y, \
+                                            self.x           ,self.y                )):
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
                     self.master.toggleTurn()
@@ -189,14 +189,21 @@ class chessBoard(Frame):
                 l.append(temp[i][j])
         return l
 
-    def validMove(self, oCell, nCell):
-        ''' Given the starting cell (oCell) and the 
-            ending cell (nCell), this function returns whether
-            it is a valid move. 
+    def validMove(self, r1, c1, r2, c2):
+        ''' Given a move, it returns whether the move is valid
+        by generating all possible moves and checking if the 
+        given one is one of them.'''
 
-            Function will be given index of the cells in the list \'self.cells\''''
-        ############ Work in Progress #############
+        # Generating all possible moves
+
+        # Bishop
+
+
+
+
         return True
+
+
 
 def play_chess():
     root = Tk()
