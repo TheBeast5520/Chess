@@ -25,9 +25,9 @@ class Piece(Canvas):
     
     def __init__(self,master,BG,coord):
         self.bgColor=BG
-        self.x=coord[0]
-        self.y=coord[1]
-        self.f=f(self.x,self.y)
+        self.r=coord[0]
+        self.c=coord[1]
+        self.f=f(self.r,self.c)
         self.slength=50
         Canvas.__init__(self,master,width=self.slength,height=self.slength,bg=self.bgColor,highlightthickness=0,relief=RAISED)
 
@@ -85,8 +85,8 @@ class Piece(Canvas):
                     pieceClicked = (True,self)
         else:   # if second click            
             if matchingColors == False:
-                if (self.master.validMove(  pieceClicked[1].x,pieceClicked[1].y, \
-                                            self.x           ,self.y            )):
+                if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
+                                            self.r           ,self.c            )):
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
                     self.master.toggleTurn()
