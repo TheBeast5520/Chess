@@ -141,6 +141,7 @@ class chessBoard(Frame):
 
     def toggleTurn(self):
         self.turn = (self.turn+1)%2
+        self.flipBoard()
 
     def unhighlight(self):
         for i in self.cells:
@@ -176,7 +177,51 @@ class chessBoard(Frame):
             for j in range(8):
                 l.append(temp[i][j])
         return l
+    
+    def genPawnMoves(self, color, srcRow, srcCol):
+        pawnMoves = []
+        
+        if color == "w":
+            if f(srcRow+1,srcCol).piece == 'none':
+                if srcRow == 7:
+                    
+            if f(srcRow-1,srcCol+1).piece != 'none':
+                pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol+1])
+            if f(srcRow+1,srcCol+1).piece != 'none':
+                pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol+1])
+            
+        if color == "b":
+            if f(srcRow-1,srcCol).piece == 'none':
+                if srcRow == 2:
+                    
+            if f(srcRow-1,srcCol-1).piece != 'none':
+                pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol-1])
+            if f(srcRow+1,srcCol-1).piece != 'none':
+                pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol-1])
+                
+        return pawnMoves
+        
+    def searchForPieces(self, color):
+        pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
 
+        for i in range(8):
+            for j in range(8):
+                temp = self.cells[f(i,j)].piece
+                if temp == color + 'pawn':
+                    pawns.append([i,j])
+                elif temp == color + 'bish':
+                    bishops.append([i,j])
+                elif temp == color + 'nite':
+                    knights.append([i,j])
+                elif temp == color + 'rook':
+                    rooks.append([i,j])
+                elif temp == color + 'quen':
+                    queens.append([i,j])
+                elif temp == color + 'king':
+                    king.append([i,j])
+                    
+        return [pawns, bishops, knights, rooks, queens, king]
+        
     def validMove(self, r1, c1, r2, c2):
         ''' Given a move, it returns whether the move is valid
         by generating all possible moves and checking if the 
@@ -185,24 +230,34 @@ class chessBoard(Frame):
         # Generating all possible moves
 
         color = ['w','b'][self.turn]
-
-        if self.cells[f(r1,c1)].piece == color + 'bish':
-            return self.bishMoves(r1,c1,r2,c2)
-        elif self.cells[f(r1,c1)].piece == color + 'pawn':
-            return self.pawnMoves(r1,c1,r2,c2)
-
+        piece = self.cells[f(r1,c1)].piece
+        move = [r1, c1, r2, c2]
+        legal = False  # only based on movement for now
+        
+        if piece[1:] == 'pawn':
+            pawnMoves = self.genPawnMoves(color, r1, c1)
+            if move in pawnMoves:
+                legal = True
+        if piece[1:] == 'bish':
+            bishopMoves = self.genBishopMoves(r1, c1)
+            if move in bishopMoves:
+                legal = True
+        if piece[1:] == 'nite':
+            knightMoves = self.genKnightMoves(r1, c1)
+            if move in knightMoves:
+                legal = True
+        if piece[1:] == 'quen':
+            queenMoves = self.genQueenMoves(r1, c1)
+            if move in queenMoves:
+                legal = True
+        if piece[1:] == 'king':
+            kingMoves = self.genKingMoves(r1, c1)
+            if move in kingMoves:
+                legal = True
 
         # call separate functions.
 
-        return True
-
-    def bishMoves(self,r1,c1,r2,c2):
-        #generate moves and return whether given move is one of them
-        pass
-
-    def pawnMoves(self,r1,c1,r2,c2):
-        #generate moves and return whether given move is one of them
-        pass
+        return legal
 
 
 
@@ -214,28 +269,3 @@ def play_chess():
 
 
 play_chess()
-
-
-# pawns = []
-# bishops = []
-# knights = []
-# rooks = []
-# queens = []
-# king = []
-
-
-# for i in range(8):
-#     for j in range(8):
-#         temp = self.cells[f(i,j)].piece
-#         if temp == color + 'pawn':
-#             pawns.append([i,j])
-#         elif temp == color + 'bish':
-#             bishops.append([i,j])
-#         elif temp == color + 'nite':
-#             knights.append([i,j])
-#         elif temp == color + 'rook':
-#             rooks.append([i,j])
-#         elif temp == color + 'quen':
-#             rooks.append([i,j])
-#         elif temp == color + 'king':
-#             king.append([i,j])
