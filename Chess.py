@@ -25,6 +25,7 @@ class Piece(Canvas):
     
     def __init__(self,master,BG,coord):
         self.bgColor=BG
+        self.colorSave=BG
         self.r=coord[0]
         self.c=coord[1]
         self.f=f(self.r,self.c)
@@ -62,13 +63,16 @@ class Piece(Canvas):
         # self.itemconfig(self.text,text="")
 
     def highlight(self):
-        self['bg']='lightgreen'
+        self['bg']='dark orange'
 
     def unhighlight(self):
-        self['bg']=self.bgColor
+        self['bg']=self.colorSave
 
-    def isHighlighted(self):
-        return self['bg']=='lightgreen'
+    def isHighlighted(self, Type):
+        if Type == 'move':
+            return self['bg']=='medium spring green'
+        elif Type == 'check':
+            return self['bg']=='firebrick1'
 
     def promote(self):
         self.master.unBindAll()
@@ -135,11 +139,19 @@ class Piece(Canvas):
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
+
                     if self.r==0 and self.piece[1:]=='pawn':
                         self.promote()
                     else:
                         self.master.toggleTurn()
-            else:
+
+                    self.master.unhighlightKeySquares()
+                    self.master.gameMoves.append([pieceClicked[1].piece, pieceClicked[1], self])
+                    self.master.highlightKeySquares(pieceClicked[1], self, 'move')
+                    self.master.toggleTurn()
+                else:
+                    pieceClicked[1].unhighlight()
+            else:                
                 pieceClicked[1].unhighlight()
                 if self == pieceClicked[1]:  # if same piece
                     pieceClicked = (False, None)
@@ -148,7 +160,6 @@ class Piece(Canvas):
                 pieceClicked = (True, self) 
                 return 
 
-            pieceClicked[1].unhighlight()
             pieceClicked = (False, None)
             
         return
@@ -159,6 +170,9 @@ class chessBoard(Frame):
         Frame.__init__(self,master)
         self.grid()
         self.cells=[]
+        
+        self.gameMoves = []
+        
         for i in range(8):
             for j in range(8):
                 if (i%2==0 and j%2==0) or (i%2==1 and j%2==1):
@@ -192,9 +206,24 @@ class chessBoard(Frame):
         self.turn = (self.turn+1)%2
         self.flipBoard()
 
-    def unhighlight(self):
-        for i in self.cells:
-            i.unhighlight()
+    def highlightKeySquares(self, srcSquare, dstSquare, Type):
+        if Type == 'move':
+            color = 'medium spring green'
+        if Type == 'check':
+            color = 'firebrick1'
+        srcSquare['bg'] = color
+        dstSquare['bg'] = color
+        srcSquare.colorSave = srcSquare['bg']
+        dstSquare.colorSave = dstSquare['bg']
+        
+    def unhighlightKeySquares(self):
+        if len(self.gameMoves) > 0:
+            srcSquare = self.gameMoves[-1][1]
+            dstSquare = self.gameMoves[-1][2]
+            srcSquare.colorSave = srcSquare.bgColor
+            dstSquare.colorSave = dstSquare.bgColor
+            srcSquare.unhighlight()
+            dstSquare.unhighlight()
 
     def flipBoard(self):
         for i in range(8):
@@ -397,7 +426,6 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
-
 
 
 def play_chess():
