@@ -1,7 +1,5 @@
 # Chess
 
-**WIP**
-
 #### Description
 
 A 2-player Chess Code in Python.
