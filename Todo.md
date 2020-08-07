@@ -2,17 +2,17 @@ DONE
 * Board
 * Piece Placement
 * Flip-Board function
-
-TODO
-
 * Bishop moves
-* Pawn moves
-  * En Passant
-  * Normal
-  * Promotion
 * Rook moves
 * Queen moves
 * Knight moves
+
+TODO
+
+* Pawn moves
+  * En Passant
+  * ~~Normal~~
+  * Promotion
 * King moves
   * Castling
   * Normal
