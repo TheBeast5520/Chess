@@ -182,22 +182,23 @@ class chessBoard(Frame):
         pawnMoves = []
         
         if color == "w":
-            if self.cells[f(srcRow+1,srcCol)].piece == 'none':
-                if srcRow == 7:
-                    pass
-            if self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
-                pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol+1])
-            if self.cells[f(srcRow+1,srcCol+1)].piece != 'none':
-                pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol+1])
-            
-        if color == "b":
             if self.cells[f(srcRow-1,srcCol)].piece == 'none':
-                if srcRow == 2:
-                    pass
-            if self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
-                pawnMoves.append([srcRow, srcCol, srcRow-1, srcCol-1])
-            if self.cells[f(srcRow+1,srcCol-1)].piece != 'none':
-                pawnMoves.append([srcRow, srcCol, srcRow+1, srcCol-1])
+                if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
+                    pawnMoves.append([srcRow-2, srcCol])
+                pawnMoves.append([srcRow-1, srcCol])
+            if srcCol+1 > 1 and self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
+                pawnMoves.append([ srcRow-1, srcCol-1])
+            if srcCol+1 < 8 and self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
+                pawnMoves.append([srcRow-1, srcCol+1])
+        else:
+            if self.cells[f(srcRow+1,srcCol)].piece == 'none':
+                if srcRow+1 == 2 and self.cells[f(srcRow+2,srcCol)].piece == 'none':
+                    pawnMoves.append([srcRow+2, srcCol])
+                pawnMoves.append([srcRow+1, srcCol])
+            if srcCol+1 > 1 and self.cells[f(srcRow+1,srcCol-1)].piece != 'none':
+                pawnMoves.append([srcRow+1, srcCol-1])
+            if srcCol+1 < 8 and self.cells[f(srcRow+1,srcCol+1)].piece != 'none':
+                pawnMoves.append([srcRow+1, srcCol+1])
                 
         return pawnMoves
 
@@ -306,7 +307,6 @@ class chessBoard(Frame):
             if move in kingMoves:
                 legal = True
 
-        # call separate functions.
 
         # check for check ;)
 
