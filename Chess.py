@@ -87,6 +87,8 @@ class Piece(Canvas):
             if matchingColors == False:
                 if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
                                             self.r           ,self.c            )):
+                    if self.piece != 'none':
+                        self.removePiece()
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
                     self.master.toggleTurn()
@@ -172,6 +174,9 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 temp[d[i]][d[j]]=l[i][j]
+                temp[d[i]][d[j]].r = d[i]
+                temp[d[i]][d[j]].c = d[j]
+                temp[d[i]][d[j]].f = [d[i],d[j]]
         l=[]
         for i in range(8):
             for j in range(8):
@@ -181,24 +186,14 @@ class chessBoard(Frame):
     def genPawnMoves(self, color, srcRow, srcCol):
         pawnMoves = []
         
-        if color == "w":
-            if self.cells[f(srcRow-1,srcCol)].piece == 'none':
-                if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
-                    pawnMoves.append([srcRow-2, srcCol])
-                pawnMoves.append([srcRow-1, srcCol])
-            if srcCol+1 > 1 and self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
-                pawnMoves.append([ srcRow-1, srcCol-1])
-            if srcCol+1 < 8 and self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
-                pawnMoves.append([srcRow-1, srcCol+1])
-        else:
-            if self.cells[f(srcRow+1,srcCol)].piece == 'none':
-                if srcRow+1 == 2 and self.cells[f(srcRow+2,srcCol)].piece == 'none':
-                    pawnMoves.append([srcRow+2, srcCol])
-                pawnMoves.append([srcRow+1, srcCol])
-            if srcCol+1 > 1 and self.cells[f(srcRow+1,srcCol-1)].piece != 'none':
-                pawnMoves.append([srcRow+1, srcCol-1])
-            if srcCol+1 < 8 and self.cells[f(srcRow+1,srcCol+1)].piece != 'none':
-                pawnMoves.append([srcRow+1, srcCol+1])
+        if self.cells[f(srcRow-1,srcCol)].piece == 'none':
+            if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
+                pawnMoves.append([srcRow-2, srcCol])
+            pawnMoves.append([srcRow-1, srcCol])
+        if srcCol+1 > 1 and self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
+            pawnMoves.append([ srcRow-1, srcCol-1])
+        if srcCol+1 < 8 and self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
+            pawnMoves.append([srcRow-1, srcCol+1])
                 
         return pawnMoves
 
@@ -215,7 +210,7 @@ class chessBoard(Frame):
                 if self.cells[f(r,c)].piece == 'none':
                     bishMoves.append([r, c])
                     r += dr[i]
-                    c += dr[i]
+                    c += dc[i]
                     continue
                 else:
                     if (self.cells[f(r,c)].piece[0]==color):
@@ -238,7 +233,7 @@ class chessBoard(Frame):
                 if self.cells[f(r,c)].piece == 'none':
                     rookMoves.append([r, c])
                     r += dr[i]
-                    c += dr[i]
+                    c += dc[i]
                     continue
                 else:
                     if (self.cells[f(r,c)].piece[0]==color):
@@ -283,9 +278,9 @@ class chessBoard(Frame):
         legal = False  # only based on movement for now
         
         if piece[1:] == 'pawn':
-            # pawnMoves = self.genPawnMoves(color, r1, c1)
-            # if move in pawnMoves:
-            legal = True
+            pawnMoves = self.genPawnMoves(color, r1, c1)
+            if move in pawnMoves:
+                legal = True
         if piece[1:] == 'bish':
             bishopMoves = self.genBishMoves(color, r1, c1)
             if move in bishopMoves:
