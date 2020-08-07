@@ -136,6 +136,10 @@ class Piece(Canvas):
             if matchingColors == False:
                 if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
                                             self.r           ,self.c            )):
+
+                    if (pieceClicked[1].piece[1:]=='pawn' and self.piece=='none' and pieceClicked[1].r-self.r==1 and abs(pieceClicked[1].c-self.c)==1):
+                        self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()
+
                     if self.piece != 'none':
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece)
