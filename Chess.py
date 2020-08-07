@@ -147,7 +147,7 @@ class Piece(Canvas):
                         self.master.toggleTurn()
 
                     self.master.unhighlightKeySquares()
-                    self.master.gameMoves.append([pieceClicked[1].piece, pieceClicked[1], self])
+                    self.master.gameMoves=[self.piece, pieceClicked[1], self]
                     self.master.highlightKeySquares(pieceClicked[1], self, 'move')
                 else:
                     pieceClicked[1].unhighlight()
@@ -201,6 +201,7 @@ class chessBoard(Frame):
         self.cells[f(7,6)].createPiece('wnite')
         self.cells[f(7,7)].createPiece('wrook')
         self.turn = 0
+        self.toggleTurn()
 
     def toggleTurn(self):
         self.unBindAll()
@@ -220,8 +221,8 @@ class chessBoard(Frame):
         
     def unhighlightKeySquares(self):
         if len(self.gameMoves) > 0:
-            srcSquare = self.gameMoves[-1][1]
-            dstSquare = self.gameMoves[-1][2]
+            srcSquare = self.gameMoves[1]
+            dstSquare = self.gameMoves[2]
             srcSquare.colorSave = srcSquare.bgColor
             dstSquare.colorSave = dstSquare.bgColor
             srcSquare.unhighlight()
@@ -276,6 +277,18 @@ class chessBoard(Frame):
             capturePiece = self.cells[f(srcRow-1,srcCol+1)].piece
             if capturePiece[0] != color and capturePiece != 'none':
                 pawnMoves.append([srcRow-1, srcCol+1])
+        if srcCol+1 < 8:
+            if srcRow==3:
+                if self.cells[f(srcRow-1,srcCol+1)].piece[0] != color:
+                    if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
+                        if self.gameMoves[1].f==[1,srcCol+1] and self.gameMoves[2].f==[3,srcCol+1]:
+                            pawnMoves.append([srcRow-1, srcCol+1])
+        if srcCol-1 < 8:
+            if srcRow==3:
+                if self.cells[f(srcRow-1,srcCol-1)].piece[0] != color:
+                    if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
+                        if self.gameMoves[1].f==[1,srcCol-1] and self.gameMoves[2].f==[3,srcCol-1]:
+                            pawnMoves.append([srcRow-1, srcCol-1])
                 
         return pawnMoves
 
