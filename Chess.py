@@ -389,8 +389,7 @@ class chessBoard(Frame):
                 elif temp == color + 'quen':
                     queens.append([i,j])
                 elif temp == color + 'king':
-                    king.append([i,j])
-                    
+                    king.append([i,j])        
         return [pawns, bishops, knights, rooks, queens, king]
         
     def validMove(self, r1, c1, r2, c2):
@@ -430,7 +429,6 @@ class chessBoard(Frame):
             if move in kingMoves:
                 legal = True
 
-
         # check for check ;)
 
         return legal
@@ -444,7 +442,6 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
-
 
 def play_chess():
     root = Tk()
