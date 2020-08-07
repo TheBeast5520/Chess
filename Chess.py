@@ -260,6 +260,19 @@ class chessBoard(Frame):
             niteMoves.append([r,c])
         return niteMoves
 
+    def genKingMoves(self, color, srcRow, srcCol):
+        kingMoves = []
+        dr = [1, 1, 1, 0, -1, -1, -1, 0]
+        dc = [1, -1, 0, 1, 1, -1, 0, -1]
+        for i in range(8):
+            r = srcRow + dr[i]
+            c = srcCol + dc[i]
+            if (r > 7 or r < 0 or c > 7 or c < 0):
+                continue
+            if (self.cells[f(r,c)].piece[0]==color):
+                continue
+            kingMoves.append([r,c])
+        return kingMoves
         
     def searchForPieces(self, color):
         pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
