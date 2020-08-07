@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import time
 
 def f(x, y):
     return x*8+y
@@ -116,7 +117,7 @@ class Piece(Canvas):
         self.master.kButton.grid_remove()
         self.master.conButton.grid_remove()
         self.master.bindAll()
-        self.master.toggleTurn()
+        self.after(500, self.master.toggleTurn())
 
     def move(self, misc=''):
         global pieceClicked
@@ -143,7 +144,7 @@ class Piece(Canvas):
                     if self.r==0 and self.piece[1:]=='pawn':
                         self.promote()
                     else:
-                        self.master.toggleTurn()
+                        self.after(500, self.master.toggleTurn)
 
                     self.master.unhighlightKeySquares()
                     self.master.gameMoves.append([pieceClicked[1].piece, pieceClicked[1], self])
