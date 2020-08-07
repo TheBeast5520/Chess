@@ -117,7 +117,7 @@ class Piece(Canvas):
         self.master.kButton.grid_remove()
         self.master.conButton.grid_remove()
         self.master.bindAll()
-        self.after(500, self.master.toggleTurn())
+        self.master.toggleTurn()
 
     def move(self, misc=''):
         global pieceClicked
@@ -144,7 +144,7 @@ class Piece(Canvas):
                     if self.r==0 and self.piece[1:]=='pawn':
                         self.promote()
                     else:
-                        self.after(500, self.master.toggleTurn)
+                        self.master.toggleTurn()
 
                     self.master.unhighlightKeySquares()
                     self.master.gameMoves.append([pieceClicked[1].piece, pieceClicked[1], self])
@@ -203,8 +203,10 @@ class chessBoard(Frame):
         self.turn = 0
 
     def toggleTurn(self):
+        self.unBindAll()
+        self.after(1000, self.flipBoard)
         self.turn = (self.turn+1)%2
-        self.flipBoard()
+        self.bindAll()
 
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
