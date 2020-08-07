@@ -224,6 +224,29 @@ class chessBoard(Frame):
                         break
         return bishMoves
 
+    def genRookMoves(self, color, srcRow, srcCol):
+        rookMoves = []
+        dr = [1, -1, 0, 0]
+        dc = [0, 0, 1, -1]
+        for i in range(4):
+            r = srcRow+dr[i]
+            c = srcCol+dc[i]
+            while (True):
+                if (r > 7 or r < 0 or c > 7 or c < 0):
+                    break
+                if self.cells[f(r,c)].piece == 'none':
+                    rookMoves.append([r, c])
+                    r += dr[i]
+                    c += dr[i]
+                    continue
+                else:
+                    if (self.cells[f(r,c)].piece[0]==color):
+                        break
+                    else:
+                        rookMoves.append([r,c])
+                        break
+        return rookMoves
+
         
     def searchForPieces(self, color):
         pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
@@ -259,12 +282,16 @@ class chessBoard(Frame):
         legal = False  # only based on movement for now
         
         if piece[1:] == 'pawn':
-            pawnMoves = self.genPawnMoves(color, r1, c1)
-            if move in pawnMoves:
-                legal = True
+            # pawnMoves = self.genPawnMoves(color, r1, c1)
+            # if move in pawnMoves:
+            legal = True
         if piece[1:] == 'bish':
             bishopMoves = self.genBishMoves(color, r1, c1)
             if move in bishopMoves:
+                legal = True
+        if piece[1:] == 'rook':
+            rookMoves = self.genRookMoves(color, r1, c1)
+            if move in rookMoves:
                 legal = True
         if piece[1:] == 'nite':
             knightMoves = self.genKnightMoves(color, r1, c1)
