@@ -210,7 +210,6 @@ class chessBoard(Frame):
         self.unBindAll()
         self.after(1000, self.flipBoard)
         self.turn = (self.turn+1)%2
-        self.bindAll()
 
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
@@ -240,6 +239,7 @@ class chessBoard(Frame):
             for j in range(8):
                 self.cells[f(i,j)].grid(row=i,column=j)
                 self.cells[f(i,j)].createPiece(self.cells[f(i,j)].piece)
+        self.bindAll()
 
     def rotateMat(self):
         d = {0:7,1:6,2:5,3:4,4:3,5:2,6:1,7:0}
@@ -442,6 +442,7 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
+
 
 def play_chess():
     root = Tk()
