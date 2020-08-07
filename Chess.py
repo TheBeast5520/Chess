@@ -237,10 +237,14 @@ class chessBoard(Frame):
             if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
                 pawnMoves.append([srcRow-2, srcCol])
             pawnMoves.append([srcRow-1, srcCol])
-        if srcCol+1 > 1 and self.cells[f(srcRow-1,srcCol-1)].piece != 'none':
-            pawnMoves.append([ srcRow-1, srcCol-1])
-        if srcCol+1 < 8 and self.cells[f(srcRow-1,srcCol+1)].piece != 'none':
-            pawnMoves.append([srcRow-1, srcCol+1])
+        if srcCol+1 > 1:
+            capturePiece = self.cells[f(srcRow-1,srcCol-1)].piece 
+            if capturePiece[0] != color and capturePiece[0] != 'none':
+                pawnMoves.append([srcRow-1, srcCol-1])
+        if srcCol+1 < 8:
+            capturePiece = self.cells[f(srcRow-1,srcCol+1)].piece
+            if capturePiece[0] != color and capturePiece[0] != 'none':
+                pawnMoves.append([srcRow-1, srcCol+1])
                 
         return pawnMoves
 
