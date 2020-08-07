@@ -201,7 +201,6 @@ class chessBoard(Frame):
         self.cells[f(7,6)].createPiece('wnite')
         self.cells[f(7,7)].createPiece('wrook')
         self.turn = 0
-        self.toggleTurn()
 
     def toggleTurn(self):
         self.unBindAll()
