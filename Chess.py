@@ -207,11 +207,11 @@ class chessBoard(Frame):
 
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
-            color = 'medium spring green'
+            color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
-            color = 'firebrick1'
-        srcSquare['bg'] = color
-        dstSquare['bg'] = color
+            color = ['firebrick1', 'firebrick1']
+        srcSquare['bg'] = color[0]
+        dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
         dstSquare.colorSave = dstSquare['bg']
         
@@ -265,13 +265,13 @@ class chessBoard(Frame):
             if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
                 pawnMoves.append([srcRow-2, srcCol])
             pawnMoves.append([srcRow-1, srcCol])
-        if srcCol+1 > 1:
+        if srcCol-1 > 1:
             capturePiece = self.cells[f(srcRow-1,srcCol-1)].piece 
-            if capturePiece[0] != color and capturePiece[0] != 'none':
+            if capturePiece[0] != color and capturePiece != 'none':
                 pawnMoves.append([srcRow-1, srcCol-1])
         if srcCol+1 < 8:
             capturePiece = self.cells[f(srcRow-1,srcCol+1)].piece
-            if capturePiece[0] != color and capturePiece[0] != 'none':
+            if capturePiece[0] != color and capturePiece != 'none':
                 pawnMoves.append([srcRow-1, srcCol+1])
                 
         return pawnMoves
