@@ -17,8 +17,14 @@ Main contributors: TheBeast5520 and Poky-Stuffed
 This code is under the MIT license, meaning you can do pretty much whatever you want with it.
 
 #### Versions
+
 ----------------------
-Version 0.6
+Version 0.7 released
+
+Features added
+* En Passant
+----------------------
+Version 0.6 released
 
 Features added
 * Highlighting Moves
