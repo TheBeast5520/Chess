@@ -286,7 +286,7 @@ class chessBoard(Frame):
                     if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
                         if self.gameMoves[1].f==[1,srcCol+1] and self.gameMoves[2].f==[3,srcCol+1]:
                             pawnMoves.append([srcRow-1, srcCol+1])
-        if srcCol-1 < 8:
+        if srcCol-1 > -1:
             if srcRow==3:
                 if self.cells[f(srcRow-1,srcCol-1)].piece[0] != color:
                     if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
