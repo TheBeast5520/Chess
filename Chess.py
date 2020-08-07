@@ -185,7 +185,7 @@ class chessBoard(Frame):
     
     def genPawnMoves(self, color, srcRow, srcCol):
         pawnMoves = []
-        
+
         if self.cells[f(srcRow-1,srcCol)].piece == 'none':
             if srcRow+1 == 7 and self.cells[f(srcRow-2,srcCol)].piece == 'none':
                 pawnMoves.append([srcRow-2, srcCol])
@@ -243,6 +243,23 @@ class chessBoard(Frame):
                         break
         return rookMoves
 
+    def genQuenMoves(self, color, srcRow, srcCol):
+        return self.genRookMoves(color, srcRow, srcCol) + self.genBishMoves(color, srcRow, srcCol)
+
+    def genNiteMoves(self, color, srcRow, srcCol):
+        niteMoves = []
+        dr = [2, 2, 1, 1, -2, -2, -1, -1]
+        dc = [1, -1, 2, -2, 1, -1, 2, -2]
+        for i in range(8):
+            r = srcRow + dr[i]
+            c = srcCol + dc[i]
+            if (r > 7 or r < 0 or c > 7 or c < 0):
+                continue
+            if (self.cells[f(r,c)].piece[0]==color):
+                continue
+            niteMoves.append([r,c])
+        return niteMoves
+
         
     def searchForPieces(self, color):
         pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
@@ -290,11 +307,11 @@ class chessBoard(Frame):
             if move in rookMoves:
                 legal = True
         if piece[1:] == 'nite':
-            knightMoves = self.genKnightMoves(color, r1, c1)
+            knightMoves = self.genNiteMoves(color, r1, c1)
             if move in knightMoves:
                 legal = True
         if piece[1:] == 'quen':
-            queenMoves = self.genQueenMoves(color, r1, c1)
+            queenMoves = self.genQuenMoves(color, r1, c1)
             if move in queenMoves:
                 legal = True
         if piece[1:] == 'king':
