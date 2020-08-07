@@ -148,7 +148,6 @@ class Piece(Canvas):
                     self.master.unhighlightKeySquares()
                     self.master.gameMoves.append([pieceClicked[1].piece, pieceClicked[1], self])
                     self.master.highlightKeySquares(pieceClicked[1], self, 'move')
-                    self.master.toggleTurn()
                 else:
                     pieceClicked[1].unhighlight()
             else:                
