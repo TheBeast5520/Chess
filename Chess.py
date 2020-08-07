@@ -70,6 +70,50 @@ class Piece(Canvas):
     def isHighlighted(self):
         return self['bg']=='lightgreen'
 
+    def promote(self):
+        self.master.unBindAll()
+        self.master.qButton = Button(self.master, text='Queen',command=self.createQueen)
+        self.master.rButton = Button(self.master, text='Rook',command=self.createRook)
+        self.master.bButton = Button(self.master, text='Bishop',command=self.createBishop)
+        self.master.kButton = Button(self.master, text='Knight',command=self.createKnight)
+        self.master.conButton = Button(self.master, text='CONFIRM PIECE',command=self.confirmPiece)
+        self.master.qButton.grid(row=8,column=0,columnspan=2)
+        self.master.rButton.grid(row=8,column=2,columnspan=2)
+        self.master.bButton.grid(row=8,column=4,columnspan=2)
+        self.master.kButton.grid(row=8,column=6,columnspan=2)
+        self.master.conButton.grid(row=9,column=2,columnspan=4)
+
+    def createQueen(self):
+        color = self.piece[0]
+        self.removePiece()
+        self.createPiece(color+'quen')
+
+    def createRook(self):
+        color = self.piece[0]
+        self.removePiece()
+        self.createPiece(color+'rook')
+
+    def createBishop(self):
+        color = self.piece[0]
+        self.removePiece()
+        self.createPiece(color+'bish')
+
+    def createKnight(self):
+        color = self.piece[0]
+        self.removePiece()
+        self.createPiece(color+'nite')
+
+    def confirmPiece(self):
+        if self.piece == 'bpawn' or self.piece=='wpawn':
+            return 0
+        self.master.qButton.grid_remove()
+        self.master.rButton.grid_remove()
+        self.master.bButton.grid_remove()
+        self.master.kButton.grid_remove()
+        self.master.conButton.grid_remove()
+        self.master.bindAll()
+        self.master.toggleTurn()
+
     def move(self, misc=''):
         global pieceClicked
 
@@ -91,7 +135,10 @@ class Piece(Canvas):
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece)
                     pieceClicked[1].removePiece()
-                    self.master.toggleTurn()
+                    if self.r==0 and self.piece[1:]=='pawn':
+                        self.promote()
+                    else:
+                        self.master.toggleTurn()
             else:
                 pieceClicked[1].unhighlight()
                 if self == pieceClicked[1]:  # if same piece
@@ -336,6 +383,16 @@ class chessBoard(Frame):
         # check for check ;)
 
         return legal
+
+    def unBindAll(self):
+        for i in range(8):
+            for j in range(8):
+                self.cells[f(i,j)].unbind("<Button-1>")
+
+    def bindAll(self):
+        for i in range(8):
+            for j in range(8):
+                self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
 
 
 
