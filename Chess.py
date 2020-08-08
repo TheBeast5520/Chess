@@ -28,7 +28,7 @@ class Piece(Canvas):
         self.colorSave=BG
         self.r=coord[0]
         self.c=coord[1]
-        self.f=f(self.r,self.c)
+        self.f=[self.r,self.c]
         self.slength=50
         Canvas.__init__(self,master,width=self.slength,height=self.slength,bg=self.bgColor,highlightthickness=0,relief=RAISED)
 
