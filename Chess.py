@@ -64,16 +64,16 @@ class Piece(Canvas):
         # self.itemconfig(self.text,text="")
 
     def highlight(self):
-        self['bg']='dark orange'
+        self['bg']='darkolivegreen2'
 
     def unhighlight(self):
         self['bg']=self.colorSave
 
     def isHighlighted(self, Type):
         if Type == 'move':
-            return self['bg']=='medium spring green'
+            return self['bg']=='chartreuse2'
         elif Type == 'check':
-            return self['bg']=='firebrick1'
+            return self['bg']=='darkolivegreen2'
 
     def promote(self):
         self.master.unBindAll()
@@ -215,7 +215,7 @@ class chessBoard(Frame):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
-            color = ['firebrick1', 'firebrick1']
+            color = ['darkolivegreen2', 'darkolivegreen2']
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
