@@ -1,8 +1,9 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import time
 
-def f(x, y):
-    return x*8+y
+def f(r, c):
+    return r*8+c
 
 pieceClicked = (False, None)
 
@@ -29,6 +30,8 @@ class Piece(Canvas):
         self.r=coord[0]
         self.c=coord[1]
         self.f=[self.r,self.c]
+        self.cellNum = f(self.r, self.c)
+        
         self.slength=50
         Canvas.__init__(self,master,width=self.slength,height=self.slength,bg=self.bgColor,highlightthickness=0,relief=RAISED)
 
@@ -40,11 +43,18 @@ class Piece(Canvas):
     def __str__(self):
         return self.piece
 
-    def createPiece(self,pieceName, size=(50,50)):
+    def createPiece(self,pieceName, hasMoved=False, size=(50,50)):
         if pieceName=="none":
             return 0
         self.createImage(pieceName,size)
         self.piece = pieceName
+        self.hasMoved = hasMoved
+            
+    def removePiece(self):
+        self.piece = 'none'
+        self.hasMoved = False
+        self.delete(self.pic)
+        # self.itemconfig(self.text,text="")
 
     def createImage(self,pieceName,size):
         filename = self.pics[pieceName]
@@ -56,11 +66,6 @@ class Piece(Canvas):
 
     def resizePic(self,size):
         self.im = self.im.resize(size,Image.ANTIALIAS)
-
-    def removePiece(self):
-        self.piece = 'none'
-        self.delete(self.pic)
-        # self.itemconfig(self.text,text="")
 
     def highlight(self):
         self['bg']='darkolivegreen2'
@@ -90,25 +95,25 @@ class Piece(Canvas):
     def createQueen(self):
         color = self.piece[0]
         self.removePiece()
-        self.createPiece(color+'quen')
+        self.createPiece(color+'quen', True)
 
     def createRook(self):
         color = self.piece[0]
         self.removePiece()
-        self.createPiece(color+'rook')
+        self.createPiece(color+'rook', True)
 
     def createBishop(self):
         color = self.piece[0]
         self.removePiece()
-        self.createPiece(color+'bish')
+        self.createPiece(color+'bish', True)
 
     def createKnight(self):
         color = self.piece[0]
         self.removePiece()
-        self.createPiece(color+'nite')
+        self.createPiece(color+'nite', True)
 
     def confirmPiece(self):
-        if self.piece == 'bpawn' or self.piece=='wpawn':
+        if self.piece[1:] == 'pawn':
             return 0
         self.master.qButton.grid_remove()
         self.master.rButton.grid_remove()
@@ -137,14 +142,22 @@ class Piece(Canvas):
                                             self.r           ,self.c            )):
 
                     if (pieceClicked[1].piece[1:]=='pawn' and self.piece=='none' and pieceClicked[1].r-self.r==1 and abs(pieceClicked[1].c-self.c)==1):
-                        self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()
+                        self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()  # en passant check
+                        
+                    if pieceClicked[1].piece[1:] == 'king':   # castle rook move
+                        if self.cellNum - pieceClicked[1].cellNum == 2:
+                            self.master.cells[self.cellNum-1].createPiece(color + 'rook', True)
+                            self.master.cells[63].removePiece()
+                        elif self.cellNum - pieceClicked[1].cellNum == -2:
+                            self.master.cells[self.cellNum+1].createPiece(color + 'rook', True)
+                            self.master.cells[56].removePiece()
 
-                    if self.piece != 'none':
+                    if self.piece != 'none':  # in case of captures
                         self.removePiece()
-                    self.createPiece(pieceClicked[1].piece)
+                    self.createPiece(pieceClicked[1].piece, True)   # normal moving
                     pieceClicked[1].removePiece()
 
-                    if self.r==0 and self.piece[1:]=='pawn':
+                    if self.r==0 and self.piece[1:]=='pawn':  # promotion
                         self.promote()
                     else:
                         self.master.toggleTurn()
@@ -208,13 +221,15 @@ class chessBoard(Frame):
     def toggleTurn(self):
         self.unBindAll()
         self.after(1000, self.flipBoard)
+        self.bindAll()
         self.turn = (self.turn+1)%2
 
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
-            color = ['darkolivegreen2', 'darkolivegreen2']
+            color = 'darkolivegreen2'
+
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
@@ -236,9 +251,9 @@ class chessBoard(Frame):
         self.cells=self.rotateMat()
         for i in range(8):
             for j in range(8):
-                self.cells[f(i,j)].grid(row=i,column=j)
-                self.cells[f(i,j)].createPiece(self.cells[f(i,j)].piece)
-        self.bindAll()
+                newCell = self.cells[f(i,j)]
+                newCell.grid(row=i,column=j)
+                newCell.createPiece(newCell.piece, newCell.hasMoved)
 
     def rotateMat(self):
         d = {0:7,1:6,2:5,3:4,4:3,5:2,6:1,7:0}
@@ -369,6 +384,23 @@ class chessBoard(Frame):
             if (self.cells[f(r,c)].piece[0]==color):
                 continue
             kingMoves.append([r,c])
+        
+        if self.cells[f(srcRow,srcCol)].hasMoved == False:
+            if color == "w":
+                if (f(srcRow, srcCol) == 60 and self.cells[63].piece == color+'rook' and self.cells[63].hasMoved == False and
+                self.cells[61].piece == 'none' and self.cells[62].piece == 'none'):
+                    kingMoves.append([srcRow,srcCol+2])
+                if (f(srcRow, srcCol) == 60 and self.cells[56].piece == color+'rook' and self.cells[56].hasMoved == False and
+                self.cells[59].piece == 'none' and self.cells[58].piece == 'none' and self.cells[57].piece == 'none'):
+                    kingMoves.append([srcRow,srcCol-2])
+            else:
+                if (f(srcRow, srcCol) == 59 and self.cells[56].piece == color+'rook' and self.cells[56].hasMoved == False and
+                self.cells[58].piece == 'none' and self.cells[57].piece == 'none'):
+                    kingMoves.append([srcRow,srcCol-2])
+                if (f(srcRow, srcCol) == 59 and self.cells[63].piece == color+'rook' and self.cells[63].hasMoved == False and
+                self.cells[60].piece == 'none' and self.cells[61].piece == 'none' and self.cells[62].piece == 'none'):
+                    kingMoves.append([srcRow,srcCol+2])
+        
         return kingMoves
         
     def searchForPieces(self, color):
@@ -441,7 +473,6 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
-
 
 def play_chess():
     root = Tk()
