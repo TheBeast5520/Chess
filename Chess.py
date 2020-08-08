@@ -40,6 +40,8 @@ class Piece(Canvas):
 
         self.bind("<Button-1>",self.move)
 
+        self.hasMoved = False
+
     def __str__(self):
         return self.piece
 
@@ -220,7 +222,8 @@ class chessBoard(Frame):
 
     def toggleTurn(self):
         self.unBindAll()
-        self.after(1000, self.flipBoard)
+        # self.after(1000, self.flipBoard)
+        self.flipBoard()
         self.bindAll()
         self.turn = (self.turn+1)%2
 
@@ -273,6 +276,7 @@ class chessBoard(Frame):
                 temp[d[i]][d[j]].r = d[i]
                 temp[d[i]][d[j]].c = d[j]
                 temp[d[i]][d[j]].f = [d[i],d[j]]
+                temp[d[i]][d[j]].cellNum = f(d[i],d[j])
         l=[]
         for i in range(8):
             for j in range(8):
