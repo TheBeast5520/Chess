@@ -19,6 +19,14 @@ This code is under the MIT license, meaning you can do pretty much whatever you 
 #### Versions
 
 ----------------------
+Version 0.8 released!
+
+Features added
+* Castling
+
+All piece movement has now been completed! :)
+
+----------------------
 Version 0.7 released
 
 Features added
