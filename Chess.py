@@ -222,8 +222,8 @@ class chessBoard(Frame):
 
     def toggleTurn(self):
         self.unBindAll()
-        # self.after(1000, self.flipBoard)
-        self.flipBoard()
+        self.after(1000, self.flipBoard)
+        # self.flipBoard()
         self.bindAll()
         self.turn = (self.turn+1)%2
 
