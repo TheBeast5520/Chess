@@ -1,6 +1,5 @@
 from tkinter import *
 from PIL import ImageTk, Image
-import time
 
 def f(x, y):
     return x*8+y
