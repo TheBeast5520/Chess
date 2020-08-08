@@ -253,7 +253,7 @@ class chessBoard(Frame):
                 for j in range(8):
                     self.cells[f(i,j)].grid_remove()
         self.cells=self.rotateMat()
-        if self.changeGrid:
+        if changeGrid:
             for i in range(8):
                 for j in range(8):
                     newCell = self.cells[f(i,j)]
