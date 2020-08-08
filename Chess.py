@@ -247,16 +247,18 @@ class chessBoard(Frame):
             srcSquare.unhighlight()
             dstSquare.unhighlight()
 
-    def flipBoard(self):
-        for i in range(8):
-            for j in range(8):
-                self.cells[f(i,j)].grid_remove()
+    def flipBoard(self, changeGrid=True):
+        if changeGrid:
+            for i in range(8):
+                for j in range(8):
+                    self.cells[f(i,j)].grid_remove()
         self.cells=self.rotateMat()
-        for i in range(8):
-            for j in range(8):
-                newCell = self.cells[f(i,j)]
-                newCell.grid(row=i,column=j)
-                newCell.createPiece(newCell.piece, newCell.hasMoved)
+        if self.changeGrid:
+            for i in range(8):
+                for j in range(8):
+                    newCell = self.cells[f(i,j)]
+                    newCell.grid(row=i,column=j)
+                    newCell.createPiece(newCell.piece, newCell.hasMoved)
 
     def rotateMat(self):
         d = {0:7,1:6,2:5,3:4,4:3,5:2,6:1,7:0}
