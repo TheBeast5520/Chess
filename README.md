@@ -6,6 +6,12 @@ A 2-player Chess Code in Python.
 
 #### How to use
 
+You will need the python code, Chess.py, and the folder (with its contests), backgrounds, in the same directory.
+
+Libraries needed: pillow, tkinter
+
+tkinter usually comes with python, but you may have to install pillow.
+
 Click on a piece and then where you want to move it. If it is a valid move, the code will allow it.
 
 #### Mentions
