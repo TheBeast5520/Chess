@@ -142,7 +142,9 @@ class Piece(Canvas):
             if matchingColors == False:
                 if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
                                             self.r           ,self.c            )):
-
+                    # self.master.copyBoard = self.master.cells[:]
+                    moveCompleted = True
+                    self.master.copyBoard = self.master.copyCells()
                     if (pieceClicked[1].piece[1:]=='pawn' and self.piece=='none' and pieceClicked[1].r-self.r==1 and abs(pieceClicked[1].c-self.c)==1):
                         self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()  # en passant check
                         
@@ -153,20 +155,24 @@ class Piece(Canvas):
                         elif self.cellNum - pieceClicked[1].cellNum == -2:
                             self.master.cells[self.cellNum+1].createPiece(color + 'rook', True)
                             self.master.cells[56].removePiece()
-
                     if self.piece != 'none':  # in case of captures
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece, True)   # normal moving
                     pieceClicked[1].removePiece()
+                    if self.master.inCheck(['w','b'][self.master.turn]):
+                        self.master.revertMove()
+                        moveCompleted=False
+                        pieceClicked[1].unhighlight()
+                    if moveCompleted:
 
-                    if self.r==0 and self.piece[1:]=='pawn':  # promotion
-                        self.promote()
-                    else:
-                        self.master.toggleTurn()
+                        if self.r==0 and self.piece[1:]=='pawn':  # promotion
+                            self.promote()
+                        else:
+                            self.master.toggleTurn()
 
-                    self.master.unhighlightKeySquares()
-                    self.master.gameMoves=[self.piece, pieceClicked[1], self]
-                    self.master.highlightKeySquares(pieceClicked[1], self, 'move')
+                        self.master.unhighlightKeySquares()
+                        self.master.gameMoves=[self.piece, pieceClicked[1], self]
+                        self.master.highlightKeySquares(pieceClicked[1], self, 'move')
                 else:
                     pieceClicked[1].unhighlight()
             else:                
@@ -479,6 +485,59 @@ class chessBoard(Frame):
         for i in range(8):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
+
+    def revertMove(self):
+        for i in self.cells:
+            if i.piece != 'none':
+                i.removePiece()
+        for i in range(8):
+            for j in range(8):
+                self.cells[f(i,j)].createPiece(self.copyBoard[f(i,j)][0], self.copyBoard[f(i,j)][1])
+
+    def inCheck(self, colorToCheck):
+        self.toggleTurn()
+        kingLoc = 0
+        oColor = 'x'
+        if (colorToCheck=='w'):
+            oColor='b'
+        else:
+            oColor='w'
+        for i in self.cells:
+            if i.piece==colorToCheck+'king':
+                kingLoc=i.f
+        allMoves = []
+        for i in self.cells:
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='pawn':
+                    allMoves += self.genPawnMoves(oColor, i.r, i.c)
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='bish':
+                    allMoves += self.genBishMoves(oColor, i.r, i.c)
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='king':
+                    allMoves += self.genKingMoves(oColor, i.r, i.c)
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='nite':
+                    allMoves += self.genNiteMoves(oColor, i.r, i.c)
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='rook':
+                    allMoves += self.genRookMoves(oColor, i.r, i.c)
+            if i.piece[0]!=colorToCheck and i.piece != 'none':
+                if i.piece[1:]=='quen':
+                    allMoves += self.genQuenMoves(oColor, i.r, i.c)
+            
+
+        self.toggleTurn()
+        if kingLoc in allMoves:
+            return True
+        else:
+            return False
+
+    def copyCells(self):
+        a = []
+        for i in self.cells:
+            a.append([i.piece, i.hasMoved])
+        return a
 
 def play_chess():
     root = Tk()
