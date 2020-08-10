@@ -79,7 +79,7 @@ class Piece(Canvas):
         if Type == 'move':
             return self['bg']=='chartreuse2'
         elif Type == 'check':
-            return self['bg']=='darkolivegreen2'
+            return self['bg']=='tomato2'
 
     def promote(self):
         self.master.unBindAll()
@@ -143,7 +143,6 @@ class Piece(Canvas):
                 if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
                                             self.r           ,self.c            )):
                     # self.master.copyBoard = self.master.cells[:]
-                    moveCompleted = True
                     self.master.copyBoard = self.master.copyCells()
                     if (pieceClicked[1].piece[1:]=='pawn' and self.piece=='none' and pieceClicked[1].r-self.r==1 and abs(pieceClicked[1].c-self.c)==1):
                         self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()  # en passant check
@@ -159,11 +158,13 @@ class Piece(Canvas):
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece, True)   # normal moving
                     pieceClicked[1].removePiece()
+                    temp = self.master.gameMoves[:]
+                    self.master.gameMoves=[self.piece, pieceClicked[1], self]
                     if self.master.inCheck(['w','b'][self.master.turn]):
                         self.master.revertMove()
-                        moveCompleted=False
                         pieceClicked[1].unhighlight()
-                    if moveCompleted:
+                        self.master.gameMoves=temp[:]
+                    else:
 
                         if self.r==0 and self.piece[1:]=='pawn':  # promotion
                             self.promote()
@@ -171,7 +172,6 @@ class Piece(Canvas):
                             self.master.toggleTurn()
 
                         self.master.unhighlightKeySquares()
-                        self.master.gameMoves=[self.piece, pieceClicked[1], self]
                         self.master.highlightKeySquares(pieceClicked[1], self, 'move')
                 else:
                     pieceClicked[1].unhighlight()
@@ -237,7 +237,7 @@ class chessBoard(Frame):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
-            color = 'darkolivegreen2'
+            color = ['chartreuse3', 'tomato2']
 
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
