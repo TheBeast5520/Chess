@@ -169,7 +169,7 @@ class Piece(Canvas):
                             self.master.toggleTurn()
 
                         self.master.unhighlightKeySquares()
-                        self.master.gameMoves=[self.piece, pieceClicked[1], self]
+                        self.master.latestMove=[self.piece, pieceClicked[1], self]
                         self.master.highlightKeySquares(pieceClicked[1], self, 'move')
                 else:
                     pieceClicked[1].unhighlight()
@@ -193,7 +193,14 @@ class chessBoard(Frame):
         self.grid()
         self.cells=[]
         
-        self.gameMoves = []
+        self.latestMove = []
+        
+        self.genMoveFunctions = {"pawn": self.genPawnMoves,
+                                 "bish": self.genBishMoves,
+                                 "nite": self.genNiteMoves,
+                                 "rook": self.genRookMoves,
+                                 "quen": self.genQuenMoves,
+                                 "king": self.genKingMoves}
         
         for i in range(8):
             for j in range(8):
@@ -244,9 +251,9 @@ class chessBoard(Frame):
         dstSquare.colorSave = dstSquare['bg']
         
     def unhighlightKeySquares(self):
-        if len(self.gameMoves) > 0:
-            srcSquare = self.gameMoves[1]
-            dstSquare = self.gameMoves[2]
+        if len(self.latestMove) > 0:
+            srcSquare = self.latestMove[1]
+            dstSquare = self.latestMove[2]
             srcSquare.colorSave = srcSquare.bgColor
             dstSquare.colorSave = dstSquare.bgColor
             srcSquare.unhighlight()
@@ -308,14 +315,14 @@ class chessBoard(Frame):
         if srcCol+1 < 8:
             if srcRow==3:
                 if self.cells[f(srcRow-1,srcCol+1)].piece[0] != color:
-                    if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
-                        if self.gameMoves[1].f==[1,srcCol+1] and self.gameMoves[2].f==[3,srcCol+1]:
+                    if self.latestMove[0]==['b','w'][self.turn] + 'pawn':
+                        if self.latestMove[1].f==[1,srcCol+1] and self.latestMove[2].f==[3,srcCol+1]:
                             pawnMoves.append([srcRow-1, srcCol+1])
         if srcCol-1 > -1:
             if srcRow==3:
                 if self.cells[f(srcRow-1,srcCol-1)].piece[0] != color:
-                    if self.gameMoves[0]==['b','w'][self.turn] + 'pawn':
-                        if self.gameMoves[1].f==[1,srcCol-1] and self.gameMoves[2].f==[3,srcCol-1]:
+                    if self.latestMove[0]==['b','w'][self.turn] + 'pawn':
+                        if self.latestMove[1].f==[1,srcCol-1] and self.latestMove[2].f==[3,srcCol-1]:
                             pawnMoves.append([srcRow-1, srcCol-1])
                 
         return pawnMoves
@@ -413,9 +420,9 @@ class chessBoard(Frame):
                     kingMoves.append([srcRow,srcCol+2])
         
         return kingMoves
-        
+         
     def searchForPieces(self, color):
-        pawns = [], bishops = [], knights = [], rooks = [], queens = [], king = []
+        pawns, bishops, knights, rooks, queens, king = [], [], [], [], [], []
 
         for i in range(8):
             for j in range(8):
@@ -446,30 +453,10 @@ class chessBoard(Frame):
         move = [r2, c2]
         legal = False  # only based on movement for now
         
-        if piece[1:] == 'pawn':
-            pawnMoves = self.genPawnMoves(color, r1, c1)
-            if move in pawnMoves:
-                legal = True
-        if piece[1:] == 'bish':
-            bishopMoves = self.genBishMoves(color, r1, c1)
-            if move in bishopMoves:
-                legal = True
-        if piece[1:] == 'rook':
-            rookMoves = self.genRookMoves(color, r1, c1)
-            if move in rookMoves:
-                legal = True
-        if piece[1:] == 'nite':
-            knightMoves = self.genNiteMoves(color, r1, c1)
-            if move in knightMoves:
-                legal = True
-        if piece[1:] == 'quen':
-            queenMoves = self.genQuenMoves(color, r1, c1)
-            if move in queenMoves:
-                legal = True
-        if piece[1:] == 'king':
-            kingMoves = self.genKingMoves(color, r1, c1)
-            if move in kingMoves:
-                legal = True
+        the_func = self.genMoveFunctions[piece[1:]]
+        pieceMoves = the_func(color, r1, c1)
+        if move in pieceMoves:
+            legal = True
 
         # check for check ;)
 
@@ -495,7 +482,8 @@ class chessBoard(Frame):
 
     def inCheck(self, colorToCheck):
         self.toggleTurn(False)
-        kingLoc = 0
+        kingLoc = []
+
         oColor = 'x'
         if (colorToCheck=='w'):
             oColor='b'
@@ -504,26 +492,15 @@ class chessBoard(Frame):
         for i in self.cells:
             if i.piece==colorToCheck+'king':
                 kingLoc=i.f
+                
         allMoves = []
-        for i in self.cells:
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='pawn':
-                    allMoves += self.genPawnMoves(oColor, i.r, i.c)
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='bish':
-                    allMoves += self.genBishMoves(oColor, i.r, i.c)
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='king':
-                    allMoves += self.genKingMoves(oColor, i.r, i.c)
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='nite':
-                    allMoves += self.genNiteMoves(oColor, i.r, i.c)
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='rook':
-                    allMoves += self.genRookMoves(oColor, i.r, i.c)
-            if i.piece[0]!=colorToCheck and i.piece != 'none':
-                if i.piece[1:]=='quen':
-                    allMoves += self.genQuenMoves(oColor, i.r, i.c)
+        allPieces = self.searchForPieces(oColor)
+        
+        for pieceTypeGroup in allPieces:
+            for piece in pieceTypeGroup:
+                pieceType = self.cells[f(piece[0],piece[1])].piece[1:]
+                allMoves += self.genMoveFunctions[pieceType](oColor, piece[0], piece[1])
+
         self.toggleTurn(False)
         if kingLoc in allMoves:
             return True
