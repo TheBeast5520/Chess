@@ -23,6 +23,13 @@ Main contributors: TheBeast5520 and Poky-Stuffed
 This code is under the MIT license, meaning you can do pretty much whatever you want with it.
 
 #### Versions
+----------------------
+Version 0.9 released!
+
+Features added
+* Check (not checkmate)
+
+Almost version 1!
 
 ----------------------
 Version 0.8 released!
