@@ -238,7 +238,6 @@ class chessBoard(Frame):
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
             color = 'darkolivegreen2'
-
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
