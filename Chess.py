@@ -79,7 +79,7 @@ class Piece(Canvas):
         if Type == 'move':
             return self['bg']=='chartreuse2'
         elif Type == 'check':
-            return self['bg']=='darkolivegreen2'
+            return self['bg']=='tomato2'
 
     def promote(self):
         self.master.unBindAll()
@@ -247,12 +247,7 @@ class chessBoard(Frame):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
-<<<<<<< HEAD
-            color = 'darkolivegreen2'
-=======
-            color = ['darkolivegreen2', 'darkolivegreen2']
-
->>>>>>> Checksquares draft
+            color = ['tomato2', 'tomato2']
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
@@ -510,10 +505,11 @@ class chessBoard(Frame):
                 allMoves += self.genMoveFunctions[pieceType](oColor, piece[0], piece[1])
 
         self.toggleTurn(False)
+        d = {0:7,1:6,2:5,3:4,4:3,5:2,6:1,7:0}
         if kingLoc in allMoves:
-            return True, kingLoc
+            return True, [d[kingLoc[0]], d[kingLoc[1]]]
         else:
-            return False, kingLoc
+            return False, [d[kingLoc[0]], d[kingLoc[1]]]
 
     def copyCells(self):
         a = []
