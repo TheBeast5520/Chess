@@ -549,7 +549,7 @@ class chessBoard(Frame):
                 checkmate=False
                 break
         pieceClicked = [temp[0], self.cells[temp[1]]]
-        self.revertMove(board)
+        self.revertMove(board)  
         self.toggleTurn()
         return checkmate
 
