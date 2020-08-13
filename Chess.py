@@ -174,6 +174,8 @@ class Piece(Canvas):
                         if opponentInCheck:
                             self.master.highlightKeySquares(self, self.master.cells[f(oppKingLoc[0],oppKingLoc[1])], 'check')
                             # check for checkmate
+                        else:
+                            self.master.cells[f(oppKingLoc[0], oppKingLoc[1])].unhighlight()
                         if check:    
                             self.master.toggleTurn()
                 else:
@@ -248,14 +250,14 @@ class chessBoard(Frame):
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
-            srcSquare['bg'] = color[0]
-            dstSquare['bg'] = color[1]
             srcSquare.colorSave = srcSquare['bg']
             dstSquare.colorSave = dstSquare['bg']
+            srcSquare['bg'] = color[0]
+            dstSquare['bg'] = color[1]
         if Type == 'check':
             color = ['tomato2', 'tomato2']
-            dstSquare['bg'] = color[1]
             dstSquare.colorSave = dstSquare['bg']
+            dstSquare['bg'] = color[1]
         
     def unhighlightKeySquares(self):
         if self.latestMove:  # if a move has been played
