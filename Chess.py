@@ -246,12 +246,14 @@ class chessBoard(Frame):
     def highlightKeySquares(self, srcSquare, dstSquare, Type):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
+            srcSquare['bg'] = color[0]
+            dstSquare['bg'] = color[1]
+            srcSquare.colorSave = srcSquare['bg']
+            dstSquare.colorSave = dstSquare['bg']
         if Type == 'check':
             color = ['tomato2', 'tomato2']
-        srcSquare['bg'] = color[0]
-        dstSquare['bg'] = color[1]
-        srcSquare.colorSave = srcSquare['bg']
-        dstSquare.colorSave = dstSquare['bg']
+            dstSquare['bg'] = color[1]
+            dstSquare.colorSave = dstSquare['bg']
         
     def unhighlightKeySquares(self):
         if self.latestMove:  # if a move has been played
