@@ -123,7 +123,6 @@ class Piece(Canvas):
         self.master.kButton.grid_remove()
         self.master.conButton.grid_remove()
         self.master.bindAll()
-        self.master.toggleTurn()
 
     def move(self, misc=''):
         global pieceClicked
@@ -157,19 +156,24 @@ class Piece(Canvas):
                         self.removePiece()
                     self.createPiece(pieceClicked[1].piece, True)   # normal moving
                     pieceClicked[1].removePiece()
-                    if self.master.inCheck(['w','b'][self.master.turn]):
+                    if self.master.inCheck(['w','b'][self.master.turn])[0]:  # if moving into or staying in check
                         self.master.revertMove()
                         moveCompleted=False
                         pieceClicked[1].unhighlight()
                     else:
                         if self.r==0 and self.piece[1:]=='pawn':  # promotion
                             self.promote()
-                        else:
-                            self.master.toggleTurn()
 
                         self.master.unhighlightKeySquares()
                         self.master.latestMove=[self.piece, pieceClicked[1], self]
                         self.master.highlightKeySquares(pieceClicked[1], self, 'move')
+
+                        opponentInCheck, oppKingLoc = self.master.inCheck(['w','b'][abs(self.master.turn-1)])  # if opponent in check after player's move                        
+                        if opponentInCheck:
+                            self.master.highlightKeySquares(self, self.master.cells[f(oppKingLoc[0],oppKingLoc[1])], 'check')
+                            # check for checkmate
+                            
+                        self.master.toggleTurn()
                 else:
                     pieceClicked[1].unhighlight()
             else:                
@@ -243,14 +247,19 @@ class chessBoard(Frame):
         if Type == 'move':
             color = ['chartreuse2', 'chartreuse3']
         if Type == 'check':
+<<<<<<< HEAD
             color = 'darkolivegreen2'
+=======
+            color = ['darkolivegreen2', 'darkolivegreen2']
+
+>>>>>>> Checksquares draft
         srcSquare['bg'] = color[0]
         dstSquare['bg'] = color[1]
         srcSquare.colorSave = srcSquare['bg']
         dstSquare.colorSave = dstSquare['bg']
         
     def unhighlightKeySquares(self):
-        if len(self.latestMove) > 0:
+        if self.latestMove:  # if a move has been played
             srcSquare = self.latestMove[1]
             dstSquare = self.latestMove[2]
             srcSquare.colorSave = srcSquare.bgColor
@@ -502,9 +511,9 @@ class chessBoard(Frame):
 
         self.toggleTurn(False)
         if kingLoc in allMoves:
-            return True
+            return True, kingLoc
         else:
-            return False
+            return False, kingLoc
 
     def copyCells(self):
         a = []
