@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
-import time
+from tkinter import messagebox
 
 def f(r, c):
     return r*8+c
@@ -38,7 +38,7 @@ class Piece(Canvas):
         self.piece='none'
         # self.text = self.create_text(50/2,50/2,anchor = "center", text="", fill='black', font = ("Arial", 24))
 
-        self.bind("<Button-1>",self.move)
+        self.bind("<Button-1>",lambda event : self.move(True, True))
 
         self.hasMoved = False
 
@@ -124,7 +124,7 @@ class Piece(Canvas):
         self.master.conButton.grid_remove()
         self.master.bindAll()
 
-    def move(self, misc=''):
+    def move(self, check=False, toggle=False):
         global pieceClicked
 
         colors = ['w','b']
@@ -141,7 +141,7 @@ class Piece(Canvas):
             if matchingColors == False:
                 if (self.master.validMove(  pieceClicked[1].r,pieceClicked[1].c, \
                                             self.r           ,self.c            )):
-                    self.master.copyBoard = self.master.copyCells()
+                    board = self.master.copyCells()
                     if (pieceClicked[1].piece[1:]=='pawn' and self.piece=='none' and pieceClicked[1].r-self.r==1 and abs(pieceClicked[1].c-self.c)==1):
                         self.master.cells[f(pieceClicked[1].r, self.c)].removePiece()  # en passant check
                         
@@ -157,9 +157,11 @@ class Piece(Canvas):
                     self.createPiece(pieceClicked[1].piece, True)   # normal moving
                     pieceClicked[1].removePiece()
                     if self.master.inCheck(['w','b'][self.master.turn])[0]:  # if moving into or staying in check
-                        self.master.revertMove()
+                        self.master.revertMove(board)
                         moveCompleted=False
                         pieceClicked[1].unhighlight()
+                    elif check and self.master.inCheckMate(['w', 'b'][self.master.turn]):
+                        self.master.end_game()
                     else:
                         if self.r==0 and self.piece[1:]=='pawn':  # promotion
                             self.promote()
@@ -172,8 +174,8 @@ class Piece(Canvas):
                         if opponentInCheck:
                             self.master.highlightKeySquares(self, self.master.cells[f(oppKingLoc[0],oppKingLoc[1])], 'check')
                             # check for checkmate
-                            
-                        self.master.toggleTurn()
+                        if check:    
+                            self.master.toggleTurn()
                 else:
                     pieceClicked[1].unhighlight()
             else:                
@@ -237,7 +239,7 @@ class chessBoard(Frame):
     def toggleTurn(self, delay=True):
         self.unBindAll()
         if delay:
-            self.after(500, self.flipBoard)
+            self.after(0, self.flipBoard)
         else:
             self.flipBoard()
         self.bindAll()
@@ -320,13 +322,13 @@ class chessBoard(Frame):
         if srcCol+1 < 8:
             if srcRow==3:
                 if self.cells[f(srcRow-1,srcCol+1)].piece[0] != color:
-                    if self.latestMove[0]==['b','w'][self.turn] + 'pawn':
+                    if len(self.latestMove)>0 and self.latestMove[0]==['b','w'][self.turn] + 'pawn':
                         if self.latestMove[1].f==[1,srcCol+1] and self.latestMove[2].f==[3,srcCol+1]:
                             pawnMoves.append([srcRow-1, srcCol+1])
         if srcCol-1 > -1:
             if srcRow==3:
                 if self.cells[f(srcRow-1,srcCol-1)].piece[0] != color:
-                    if self.latestMove[0]==['b','w'][self.turn] + 'pawn':
+                    if len(self.latestMove)>0 and self.latestMove[0]==['b','w'][self.turn] + 'pawn':
                         if self.latestMove[1].f==[1,srcCol-1] and self.latestMove[2].f==[3,srcCol-1]:
                             pawnMoves.append([srcRow-1, srcCol-1])
                 
@@ -477,13 +479,13 @@ class chessBoard(Frame):
             for j in range(8):
                 self.cells[f(i,j)].bind("<Button-1>", self.cells[f(i,j)].move)
 
-    def revertMove(self):
+    def revertMove(self, board):
         for i in self.cells:
             if i.piece != 'none':
                 i.removePiece()
         for i in range(8):
             for j in range(8):
-                self.cells[f(i,j)].createPiece(self.copyBoard[f(i,j)][0], self.copyBoard[f(i,j)][1])
+                self.cells[f(i,j)].createPiece(board[f(i,j)][0], board[f(i,j)][1])
 
     def inCheck(self, colorToCheck):
         self.toggleTurn(False)
@@ -498,8 +500,9 @@ class chessBoard(Frame):
             if i.piece==colorToCheck+'king':
                 kingLoc=i.f
                 
-        allMoves = []
         allPieces = self.searchForPieces(oColor)
+
+        allMoves = []
         
         for pieceTypeGroup in allPieces:
             for piece in pieceTypeGroup:
@@ -518,6 +521,42 @@ class chessBoard(Frame):
         for i in self.cells:
             a.append([i.piece, i.hasMoved])
         return a
+
+    def inCheckMate(self, color):
+        global pieceClicked
+        self.toggleTurn(False)
+        d = {'w':'b', 'b':'w'}
+        oColor = d[color]
+        board = self.copyCells()
+        allPieces = self.searchForPieces(oColor)
+        allMoves=[]
+        for pieceTypeGroup in allPieces:
+            for piece in pieceTypeGroup:
+                pieceType = self.cells[f(piece[0],piece[1])].piece[1:]
+                x=self.genMoveFunctions[pieceType](oColor, piece[0], piece[1])
+                y=[]
+                for i in x:
+                    y.append(piece+i)
+                allMoves += y
+        temp = [pieceClicked[0], pieceClicked[1].cellNum]
+        checkmate = True
+        # print(allMoves)
+        for i in allMoves:
+            pieceClicked = [True, self.cells[f(i[0], i[1])]]
+            self.cells[f(i[2], i[3])].move(False)
+            if self.copyCells()!=board:
+                # print(i)
+                checkmate=False
+                break
+        pieceClicked = [temp[0], self.cells[temp[1]]]
+        self.revertMove(board)
+        self.toggleTurn()
+        return checkmate
+
+    def end_game(self):
+        print("here")
+        self.unBindAll()
+        messagebox.showinfo('2048',"Checkmate! "+['White ', 'Black '][self.turn]+"wins!")
 
 def play_chess():
     root = Tk()

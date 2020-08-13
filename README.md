@@ -14,6 +14,10 @@ tkinter usually comes with python, but you may have to install pillow.
 
 Click on a piece and then where you want to move it. If it is a valid move, the code will allow it.
 
+Notes:
+
+The code is now fully-functional for two-player simple game of chess. In certain scenarios
+
 #### Mentions
 
 Main contributors: TheBeast5520 and Poky-Stuffed
@@ -23,6 +27,15 @@ Main contributors: TheBeast5520 and Poky-Stuffed
 This code is under the MIT license, meaning you can do pretty much whatever you want with it.
 
 #### Versions
+
+----------------------
+VERSION 1 RELEASED!
+
+Features added
+* Checkmate
+
+The code is now fully-functional for two-player simple game of chess.
+
 ----------------------
 Version 0.9 released!
 
