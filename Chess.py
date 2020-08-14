@@ -448,7 +448,7 @@ class chessBoard(Frame):
                     queens.append([i,j])
                 elif temp == color + 'king':
                     king.append([i,j])        
-        return [pawns, bishops, knights, rooks, queens, king]
+        return [king, pawns, bishops, knights, rooks, queens]
         
     def validMove(self, r1, c1, r2, c2):
         ''' Given a move, it returns whether the move is valid
