@@ -29,7 +29,7 @@ This code is under the MIT license, meaning you can do pretty much whatever you 
 #### Versions
 
 ----------------------
-VERSION 1 RELEASED!
+Version 1 RELEASED!
 
 Features added
 * Checkmate
