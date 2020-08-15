@@ -558,7 +558,7 @@ class chessBoard(Frame):
     def end_game(self):
         print("here")
         self.unBindAll()
-        messagebox.showinfo('2048',"Checkmate! "+['White ', 'Black '][self.turn]+"wins!")
+        messagebox.showinfo('Chess',"Checkmate! "+['White ', 'Black '][self.turn]+"wins!")
 
 def play_chess():
     root = Tk()
